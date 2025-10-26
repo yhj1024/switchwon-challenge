@@ -70,9 +70,11 @@ export function LoginForm() {
             {error?.message || "로그인에 실패했습니다."}
           </p>
         )}
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "로그인 중..." : "로그인하기"}
-        </Button>
+        <div className="w-[31rem]">
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "로그인 중..." : "로그인하기"}
+          </Button>
+        </div>
       </form>
     </main>
   );

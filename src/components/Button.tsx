@@ -5,12 +5,18 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   size?: "sm" | "lg";
+  variant?: "primary" | "secondary";
   disabled?: boolean;
 }
 
 const sizeClasses = {
-  sm: "h-[2.6875rem] w-[5.875rem] px-3 py-2",
-  lg: "h-[4.8125rem] w-[31rem] px-[0.625rem] py-6 text-[1.25rem]",
+  sm: "px-3 py-2",
+  lg: "px-[0.625rem] py-6 text-[1.25rem]",
+};
+
+const variantClasses = {
+  primary: "bg-[#1B2334]",
+  secondary: "bg-[#3479EB]",
 };
 
 export function Button({
@@ -18,6 +24,7 @@ export function Button({
   onClick,
   type = "button",
   size = "lg",
+  variant = "primary",
   disabled = false,
 }: ButtonProps) {
   return (
@@ -25,7 +32,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-[0.75rem] bg-[#1B2334] font-semibold leading-[133%] text-white ${sizeClasses[size]} disabled:cursor-not-allowed disabled:opacity-50`}
+      className={`w-full rounded-[0.75rem] font-semibold leading-[133%] text-white ${sizeClasses[size]} ${variantClasses[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
     >
       {children}
     </button>

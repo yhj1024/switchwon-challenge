@@ -1,8 +1,12 @@
+import { Container } from "../_components/container";
+
 export default function ExchangePage() {
   return (
-    <div>
-      <h1>환전하기</h1>
-      {/* TODO: 환전 폼 구현 */}
-    </div>
+    <Container
+      title="환율 정보"
+      description="실시간 환율을 확인하고 간편하게 환전하세요."
+    >
+      <div>환율 정보</div>
+    </Container>
   );
 }

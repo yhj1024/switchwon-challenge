@@ -1,8 +1,12 @@
+import { Container } from "../_components/container";
+
 export default function HistoryPage() {
   return (
-    <div>
-      <h1>환전 내역</h1>
+    <Container
+      title="환전 내역"
+      description="환전 거래 내역을 확인할 수 있습니다."
+    >
       {/* TODO: 환전 내역 테이블 구현 */}
-    </div>
+    </Container>
   );
 }

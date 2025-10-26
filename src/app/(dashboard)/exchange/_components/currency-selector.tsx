@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Currency } from "@/types/exchange";
-import { CURRENCY_FLAGS } from "@/constants/currency";
+import { CURRENCY_METADATA } from "@/constants/currency";
 
 interface CurrencySelectorProps {
   value: Currency;
@@ -10,20 +10,17 @@ interface CurrencySelectorProps {
   excludeCurrency?: Currency;
 }
 
-const currencyOptions = [
-  {
-    value: "USD",
-    label: "USD 환전하기",
-    dropdownLabel: "미국 USD",
-    flag: CURRENCY_FLAGS.USD,
-  },
-  {
-    value: "JPY",
-    label: "JPY 환전하기",
-    dropdownLabel: "일본 JPY",
-    flag: CURRENCY_FLAGS.JPY,
-  },
-] as const;
+// 동적으로 통화 옵션 생성 (확장성 개선)
+const generateCurrencyOptions = (excludeCurrency?: Currency) => {
+  return Object.values(CURRENCY_METADATA)
+    .filter((meta) => meta.code !== excludeCurrency)
+    .map((meta) => ({
+      value: meta.code,
+      label: `${meta.code} 환전하기`,
+      dropdownLabel: `${meta.country} ${meta.code}`,
+      flag: meta.flag,
+    }));
+};
 
 export function CurrencySelector({
   value,
@@ -33,10 +30,7 @@ export function CurrencySelector({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const options = currencyOptions.filter(
-    (opt) => opt.value !== excludeCurrency
-  );
-
+  const options = generateCurrencyOptions(excludeCurrency);
   const selectedOption = options.find((opt) => opt.value === value);
 
   const handleSelect = (currency: Currency) => {

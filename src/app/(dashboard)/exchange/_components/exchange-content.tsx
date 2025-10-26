@@ -8,8 +8,11 @@ import { useExchangeRates } from "@/api/hooks/use-exchange-rate";
 import { useWallet } from "@/api/hooks/use-wallet";
 
 export function ExchangeContent() {
-  const { data: exchangeRatesData, isLoading: isRatesLoading } =
-    useExchangeRates();
+  const {
+    data: exchangeRatesData,
+    isLoading: isRatesLoading,
+    refetch: refetchExchangeRates,
+  } = useExchangeRates();
   const { data: walletData, isLoading: isWalletLoading } = useWallet();
 
   if (isRatesLoading || isWalletLoading) {
@@ -104,7 +107,10 @@ export function ExchangeContent() {
       </aside>
 
       {/* 우측 영역: 환전 폼 */}
-      <ExchangeForm exchangeRates={exchangeRatesMap} />
+      <ExchangeForm
+        exchangeRates={exchangeRatesMap}
+        refetchExchangeRates={refetchExchangeRates}
+      />
     </div>
   );
 }

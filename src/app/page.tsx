@@ -1,3 +1,5 @@
-export default function Home() {
-  return <main>홈 입니다</main>;
+import { redirect } from "next/navigation";
+
+export default function RootPage() {
+  redirect("/login");
 }

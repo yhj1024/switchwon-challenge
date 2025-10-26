@@ -6,7 +6,7 @@ import { Currency, TransactionType } from "@/types/exchange";
 import { CurrencySelector } from "./currency-selector";
 import { TransactionTypeToggle } from "./transaction-type-toggle";
 import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+import { ExchangeInput } from "@/app/(dashboard)/exchange/_components/exchange-input";
 import { useOrderQuote, useCreateOrder } from "@/api/hooks/use-exchange";
 import { DEFAULT_EXCHANGE_FEE } from "@/constants/currency";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/messages";
@@ -74,7 +74,7 @@ export function ExchangeForm({
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amount, currency, transactionType, amountNum]);
+  }, [amount, currency, transactionType, amountNum, exchangeRates]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -102,7 +102,25 @@ export function ExchangeForm({
           setQuote(null);
         },
         onError: (error: Error) => {
-          alert(error.message || ERROR_MESSAGES.NETWORK.GENERIC);
+          // 환율 불일치 에러 처리
+          const axiosError = error as {
+            response?: {
+              status?: number;
+              data?: { code?: string; message?: string };
+            };
+            message: string;
+          };
+
+          if (
+            axiosError.response?.data?.code === "EXCHANGE_RATE_MISMATCH" ||
+            axiosError.response?.status === 400
+          ) {
+            // 환율 정보 업데이트
+            queryClient.invalidateQueries({ queryKey: ["exchangeRates"] });
+            alert(axiosError.response?.data?.message);
+          } else {
+            alert(axiosError.message || ERROR_MESSAGES.NETWORK.GENERIC);
+          }
         },
       }
     );
@@ -129,15 +147,13 @@ export function ExchangeForm({
         />
 
         <div className="mb-[1.5rem]">
-          <Input
+          <ExchangeInput
             id="amount"
             label={transactionType === "buy" ? "매수 금액" : "매도 금액"}
             type="number"
             value={amount}
             onChange={setAmount}
             placeholder="30"
-            variant="exchange"
-            fullWidth
             min="0"
             step="0.01"
             suffix={amountSuffix}
@@ -166,7 +182,7 @@ export function ExchangeForm({
         </div>
 
         <div className="mb-[2rem]">
-          <Input
+          <ExchangeInput
             id="result"
             label={transactionType === "buy" ? "필요 원화" : "받을 원화"}
             type="text"
@@ -179,11 +195,9 @@ export function ExchangeForm({
             }
             readOnly
             placeholder="0"
-            variant="exchange"
-            fullWidth
             textAlign="right"
             suffix={resultSuffix}
-            suffixColor="#F04438"
+            suffixColor={transactionType === "buy" ? "#F04438" : "#3479EB"}
           />
         </div>
 

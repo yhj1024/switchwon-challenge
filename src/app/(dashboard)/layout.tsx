@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { Button } from "@/components/button";
 import { NavLink } from "./_components/nav-link";
+import { LogoutButton } from "./_components/logout-button";
+import Link from "next/link";
 
 export default async function DashboardLayout({
   children,
@@ -19,23 +20,18 @@ export default async function DashboardLayout({
 
   return (
     <div className="dashboard-layout">
-      <nav
-        className="flex items-center justify-between border-b-1 border-[#D0D6DB] px-[2.5rem] py-[1rem]"
-        aria-label="Main navigation"
-      >
-        <div className="flex items-center">
-          <Image src="/main-logo.png" width={24} height={24} alt="Logo" />
-          <span className="ml-[0.5rem] text-[1.5rem] font-bold">
-            Exchange app
-          </span>
-        </div>
-        <div className="flex items-center gap-14">
-          <NavLink href="/exchange">환전하기</NavLink>
-          <NavLink href="/history">환전내역</NavLink>
-          <div className="w-[5.875rem]">
-            <Button size="sm" variant="secondary">
-              Log out
-            </Button>
+      <nav className="border-b-1 border-[#D0D6DB]" aria-label="Main navigation">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between px-[2.5rem] py-[1rem]">
+          <Link href="/exchange" className="flex items-center">
+            <Image src="/main-logo.png" width={24} height={24} alt="Logo" />
+            <span className="ml-[0.5rem] text-[1.5rem] font-bold">
+              Exchange app
+            </span>
+          </Link>
+          <div className="flex items-center gap-14">
+            <NavLink href="/exchange">환전하기</NavLink>
+            <NavLink href="/history">환전내역</NavLink>
+            <LogoutButton />
           </div>
         </div>
       </nav>

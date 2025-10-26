@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+import { LoginInput } from "@/app/(auth)/login/_components/login-input";
 import { useLogin } from "@/api/hooks";
 
 export function LoginForm() {
@@ -55,7 +55,7 @@ export function LoginForm() {
         onSubmit={handleSubmit}
         className="flex min-h-[16.9375rem] min-w-[35rem] flex-col items-center rounded-[1.25rem] border border-[#D0D6DB] bg-[#F7F8F9] px-[2rem] py-[1.5rem]"
       >
-        <Input
+        <LoginInput
           id="email"
           type="email"
           label="이메일 주소를 입력해주세요."

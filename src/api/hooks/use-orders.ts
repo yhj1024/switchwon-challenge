@@ -32,6 +32,8 @@ export function useOrders() {
   return useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
+    staleTime: 0, // 즉시 stale 상태로 만들어 매번 refetch
+    gcTime: 0, // 캐시 유지 안 함 (React Query v5)
   });
 }
 

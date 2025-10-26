@@ -7,11 +7,14 @@ import Image from "next/image";
 import { Button } from "@/components/button";
 import { LoginInput } from "@/app/(auth)/login/_components/login-input";
 import { useLogin } from "@/api/hooks";
+import { usePreventBack } from "@/app/(auth)/login/_hooks/use-prevent-back";
 
 export function LoginForm() {
   const [email, setEmail] = useState<string>("");
   const router = useRouter();
   const { mutate: login, isPending, isError, error } = useLogin();
+  // 뒤로가기 차단
+  usePreventBack();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,6 +28,7 @@ export function LoginForm() {
               secure: process.env.NODE_ENV === "production",
               sameSite: "strict",
             });
+
             router.push("/exchange");
           }
         },

@@ -17,10 +17,5 @@ export const fetchAuthLogin = async (request: LoginRequest) => {
 export function useLogin() {
   return useMutation({
     mutationFn: fetchAuthLogin,
-    onSuccess: (data) => {
-      if (data.data?.token) {
-        localStorage.setItem("authToken", data.data.token);
-      }
-    },
   });
 }

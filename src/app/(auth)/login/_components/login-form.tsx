@@ -1,16 +1,35 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { useLogin } from "@/api/hooks";
 
 export function LoginForm() {
   const [email, setEmail] = useState<string>("");
+  const router = useRouter();
+  const { mutate: login, isPending, isError, error } = useLogin();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Login with:", email);
+    login(
+      { email },
+      {
+        onSuccess: (data) => {
+          if (data.data?.token) {
+            Cookies.set("authToken", data.data.token, {
+              expires: 7, // 7일
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "strict",
+            });
+            router.push("/exchange");
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -46,7 +65,14 @@ export function LoginForm() {
           required
           autoComplete="email"
         />
-        <Button type="submit">로그인하기</Button>
+        {isError && (
+          <p className="mb-4 text-sm text-red-600">
+            {error?.message || "로그인에 실패했습니다."}
+          </p>
+        )}
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "로그인 중..." : "로그인하기"}
+        </Button>
       </form>
     </main>
   );

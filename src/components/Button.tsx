@@ -5,6 +5,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   size?: "sm" | "lg";
+  disabled?: boolean;
 }
 
 const sizeClasses = {
@@ -17,12 +18,14 @@ export function Button({
   onClick,
   type = "button",
   size = "lg",
+  disabled = false,
 }: ButtonProps) {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`rounded-[0.75rem] bg-[#1B2334] font-semibold leading-[133%] text-white ${sizeClasses[size]}`}
+      disabled={disabled}
+      className={`rounded-[0.75rem] bg-[#1B2334] font-semibold leading-[133%] text-white ${sizeClasses[size]} disabled:cursor-not-allowed disabled:opacity-50`}
     >
       {children}
     </button>

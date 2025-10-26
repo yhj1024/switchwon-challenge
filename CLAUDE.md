@@ -5,6 +5,7 @@
 ### Global vs Local Modules
 
 **Global Modules** (`src/` 디렉토리)
+
 - 프로젝트 전역에서 사용하는 공통 기능
 - 재사용 가능한 컴포넌트, 훅, 유틸리티
 
@@ -18,6 +19,7 @@ src/
 ```
 
 **Local Modules** (각 라우트 내부)
+
 - 특정 페이지/라우트에서만 사용하는 기능
 - 언더스코어(`_`) prefix로 구분
 - 해당 라우트 디렉토리 내부에 위치
@@ -67,6 +69,7 @@ src/app/login/
 ### Strict Type Safety
 
 **절대 금지:**
+
 ```typescript
 // ❌ any 타입 사용 금지
 const data: any = fetchData();
@@ -74,6 +77,7 @@ function process(input: any) {}
 ```
 
 **권장 방식:**
+
 ```typescript
 // ✅ 명시적 타입 정의
 interface User {

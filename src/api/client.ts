@@ -1,8 +1,15 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+/**
+ * API 기본 URL
+ */
 const API_BASE_URL = "https://exchange-example.switchflow.biz";
 
+/**
+ * Axios 인스턴스
+ * @description 서버/클라이언트 양쪽에서 사용 가능한 API 클라이언트
+ */
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -10,13 +17,17 @@ export const apiClient = axios.create({
   },
 });
 
-// Request interceptor: Add auth token
+// Request interceptor: Add auth token (클라이언트에서만)
 apiClient.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // 클라이언트 환경에서만 쿠키에서 토큰 가져오기
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("authToken");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
+    // 서버 환경에서는 각 fetch 함수에서 직접 헤더 설정
     return config;
   },
   (error) => {
@@ -28,22 +39,13 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // 에러 메시지 추출
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "요청 처리 중 오류가 발생했습니다.";
-
-    // 401: 인증 실패
-    if (error.response?.status === 401) {
+    // 401: 인증 실패 (클라이언트 환경에서만 처리)
+    if (error.response?.status === 401 && typeof window !== "undefined") {
       Cookies.remove("authToken");
-      alert("로그인이 필요합니다.");
       window.location.href = "/login";
-      return Promise.reject(error);
     }
 
-    // 그 외 에러: alert 표시
-    alert(errorMessage);
+    // 에러는 각 컴포넌트에서 처리하도록 reject
     return Promise.reject(error);
   }
 );
